@@ -1,0 +1,113 @@
+package ${basePackage}.service.${moduleName};
+
+import java.util.List;
+import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+
+import com.laoxin.core.exception.ApiException;
+import com.laoxin.core.enums.ResultStateEnum;
+import ${packageName}.daomanager.${moduleName}.${javaClassName}DaoManager;
+import ${packageName}.entity.${moduleName}.${javaClassName}Entity;
+import ${basePackage}.dto.${moduleName}.*;
+import ${basePackage}.vo.${moduleName}.*;
+
+import com.laoxin.core.vo.PageVO;
+import com.laoxin.core.enums.CommonEnum;
+import com.laoxin.core.utils.BeanUtil;
+import com.laoxin.dao.sql.utils.PageUtil;
+
+
+/**
+ * @author dao-helper
+ */
+@Slf4j
+@Service
+public class ${javaClassName}Service {
+
+    @Autowired
+    private ${javaClassName}DaoManager manager;
+
+    /**
+     * 保存
+     * @author dao-helper
+     */
+    public ${javaClassName}VO save(${javaClassName}SaveDTO dto){
+
+        ${javaClassName}Entity entity = BeanUtil.copyProperties(dto, ${javaClassName}Entity.class);
+
+        manager.insert(entity);
+
+        ${javaClassName}VO vo = BeanUtil.copyProperties(entity, ${javaClassName}VO.class);
+        return vo;
+    }
+
+    /**
+     * 更新
+     * @author dao-helper
+     */
+    public Integer updateById(${javaClassName}UpdateDTO dto){
+        ${javaClassName}Entity old = manager.getById(dto.getId());
+        if(old == null){
+            log.error("${javaClassName}Entity is not exist, entityId={}",dto.getId());
+            throw new ApiException(ResultStateEnum.RESOURCE_NOT_EXIST,dto.getId());
+        }
+        ${javaClassName}Entity entity = BeanUtil.copyProperties(dto,${javaClassName}Entity.class);
+        entity.setId(dto.getId());
+        return manager.getBaseMapper().updateById(entity);
+    }
+
+    /**
+     * 分页查询列表
+     * @author dao-helper
+     */
+    public PageVO<${javaClassName}VO> listPage(${javaClassName}PageDTO dto){
+
+        LambdaQueryWrapper<${javaClassName}Entity> wrapper = Wrappers.lambdaQuery();
+
+        wrapper.eq(dto.getId()>0,${javaClassName}Entity::getId,dto.getId());
+
+        PageVO<${javaClassName}Entity> page = manager.listEntityByPage(wrapper, dto);
+
+        return PageUtil.convertPage(page,${javaClassName}VO.class);
+    }
+
+    /**
+     * 查询所有
+     * @author dao-helper
+     */
+    public List<${javaClassName}VO> listAll(${javaClassName}ListDTO dto){
+        LambdaQueryWrapper<${javaClassName}Entity> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(dto.getId()>0,${javaClassName}Entity::getId,dto.getId());
+
+        List<${javaClassName}Entity> list = manager.getBaseMapper().selectList(wrapper);
+
+        return BeanUtil.copyProperties(list,${javaClassName}VO.class);
+    }
+
+    /**
+     * 根据id查询
+     * @author dao-helper
+     */
+    public ${javaClassName}VO getById(long id){
+        ${javaClassName}Entity entity = manager.getById(id);
+
+        return BeanUtil.copyProperties(entity,${javaClassName}VO.class);
+    }
+
+    /**
+     * 删除
+     * @author dao-helper
+     */
+    public Integer removeByIds(List<Long> ids){
+        return manager.getBaseMapper().deleteBatchIds(ids);
+    }
+
+
+}
+

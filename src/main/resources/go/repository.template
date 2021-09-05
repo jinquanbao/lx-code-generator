@@ -1,0 +1,167 @@
+package repositories
+
+import (
+    sq "github.com/Masterminds/squirrel"
+	"github.com/jmoiron/sqlx"
+	"${basePackage}/protos"
+)
+
+type ${goRepositoryClassName}Repository struct {
+	db *sqlx.DB
+}
+
+func (m *${goRepositoryClassName}Repository) Create(entity *protos.${goModelClassName}Entity) (*protos.${goModelClassName}Entity, error) {
+
+    sql := "INSERT INTO ${dataBaseName} (<#list fieldList as field><#if field.javaFieldName!="id">${field.dataBaseName}<#if field_has_next>,</#if></#if></#list>) VALUES (<#list fieldList as field><#if field.javaFieldName!="id">?<#if field_has_next>,</#if></#if></#list>)"
+
+	result, err := m.db.Exec(sql, <#list fieldList as field><#if field.javaFieldName!="id">entity.${field.goFieldName}<#if field_has_next>,</#if></#if></#list>)
+	if err != nil {
+		return nil, err
+	}
+    id,error := result.LastInsertId();
+    entity.Id = id
+	return entity,error
+}
+
+
+func (m *${goRepositoryClassName}Repository) UpdateById(entity *protos.${goModelClassName}Entity) (int64, error) {
+
+	if entity.Id == 0 {
+        logger.Warnf("${goRepositoryClassName} UpdateById error,id is inavlid id=%v", entity.Id)
+	}
+    builder := sq.Update("${dataBaseName}").Where(sq.Eq{"id": entity.Id})
+
+<#list fieldList as field>
+    <#if field.javaFieldName!="id" && field.fieldType.fieldType=="Integer">
+    if entity.${field.goFieldName} >0 {
+        builder = builder.Set("${field.dataBaseName}",entity.${field.goFieldName})
+    }
+    </#if>
+    <#if field.fieldType.fieldType=="Double">
+    if entity.${field.goFieldName} >0 {
+        builder = builder.Set("${field.dataBaseName}",entity.${field.goFieldName})
+    }
+    </#if>
+    <#if field.fieldType.fieldType=="Float">
+    if entity.${field.goFieldName} >0 {
+        builder = builder.Set("${field.dataBaseName}",entity.${field.goFieldName})
+    }
+    </#if>
+    <#if field.javaFieldName!="id" && field.fieldType.fieldType=="Long">
+    if entity.${field.goFieldName} >0 {
+        builder = builder.Set("${field.dataBaseName}",entity.${field.goFieldName})
+    }
+    </#if>
+    <#if field.fieldType.fieldType=="String">
+    if len(entity.${field.goFieldName}) >0 {
+        builder = builder.Set("${field.dataBaseName}",entity.${field.goFieldName})
+    }
+    </#if>
+</#list>
+
+    sql, args, err := builder.ToSql()
+    logger.Debugf("%v %v %v", sql, args, err)
+
+	result, err := m.db.Exec(sql,args...)
+	if err != nil {
+	    logger.Errorf("${goRepositoryClassName} update by id error sql=%v,err=%v ",sql,  err)
+		return 0, err
+	}
+
+	return result.RowsAffected()
+}
+
+func (m *${goRepositoryClassName}Repository) DeleteById(id int64) (int64, error) {
+
+    sql := "DELETE  FROM ${dataBaseName} WHERE id = ?"
+    logger.Debugf("%v %v ", sql, id)
+
+    result, err := m.db.Exec("DELETE  FROM ${dataBaseName} WHERE id = ?",id)
+
+    if err != nil {
+        logger.Errorf("${goRepositoryClassName} delete by id error sql=%v,err=%v ",sql,  err)
+        return 0, err
+    }
+
+    return result.RowsAffected()
+
+}
+
+func (m *${goRepositoryClassName}Repository) DeleteByIds(ids []int64) (int64, error) {
+
+    if len(ids) == 0 {
+        logger.Warnf("${goRepositoryClassName} DeleteByIds error,id is empty ")
+        return 0,nil
+    }
+
+    sql, args, err := sq.Delete("${dataBaseName}").Where(sq.Eq{"id": ids}).ToSql()
+    logger.Debugf("%v %v %v", sql, args, err)
+
+    result, err := m.db.Exec(sql,args...)
+
+    if err != nil {
+        logger.Errorf("${goRepositoryClassName} delete by ids error sql=%v, ids=%v, err=%v ",sql, ids,  err)
+        return 0, err
+    }
+
+    return result.RowsAffected()
+
+}
+
+func (m *${goRepositoryClassName}Repository) GetById(id int64) (r *protos.${goModelClassName}Entity, err error) {
+	var tr []protos.${goModelClassName}Entity
+
+	if err = m.db.Select(&tr, "SELECT * FROM ${dataBaseName} WHERE id = ?", id); err != nil {
+		return
+	}
+	if len(tr) == 1 {
+		return &tr[0], nil
+	}
+	return
+}
+
+func (m *${goRepositoryClassName}Repository) Page(dto *protos.${goModelClassName}PageDTO) (pageVO *protos.PageVO, err error) {
+
+	var rr []protos.${goModelClassName}Entity
+
+	builder := sq.Select("*").From("${dataBaseName}")
+
+    page := dto.Page
+    if page <1{
+        page = 1
+    }
+    sql, args, err := builder.Offset((page - 1) * dto.PageSize).Limit(dto.PageSize).ToSql()
+    logger.Debugf("%v %v %v", sql, args, err)
+
+	err = m.db.Select(&rr, sql, args...)
+
+    if err != nil{
+        logger.Errorf("${goRepositoryClassName} page error sql=%v,err=%v ",sql,  err)
+        return nil ,err
+    }
+
+    pageVO = & protos.PageVO{}
+	pageVO.List = rr
+
+	if dto.HasTotal == 1 {
+
+        selectSql, args, err := builder.ToSql()
+        countSql,_, err := sq.Select("count(*)").From("("+selectSql +")as t").ToSql()
+        logger.Debugf("%v %v %v", countSql, args, err)
+
+        var total int
+        err = m.db.Get(&total, countSql, args...)
+
+        if err != nil{
+            logger.Errorf("${goRepositoryClassName} count error sql=%v,err=%v ",countSql,  err)
+            return nil,err
+        }
+        pageVO.Total = total
+
+	}
+	return
+}
+
+
+
+

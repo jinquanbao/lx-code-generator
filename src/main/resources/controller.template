@@ -1,0 +1,63 @@
+package ${basePackage}.controller.${moduleName};
+
+import java.util.List;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.laoxin.core.vo.PageVO;
+import com.laoxin.core.dto.IdsDTO;
+import com.laoxin.core.dto.IdDTO;
+import ${basePackage}.dto.${moduleName}.*;
+import ${basePackage}.vo.${moduleName}.*;
+import ${basePackage}.service.${moduleName}.${javaClassName}Service;
+
+/**
+ * @author dao-helper
+ */
+//@RestController
+@RequestMapping("")
+@Api(tags = "")
+public class ${javaClassName}Controller {
+
+    @Autowired
+    private ${javaClassName}Service service;
+
+    @ApiOperation("新增")
+    @RequestMapping(value = "/save",method = RequestMethod.POST)
+    public ${javaClassName}VO save(@RequestBody ${javaClassName}SaveDTO dto){
+        return service.save(dto);
+    }
+
+    @ApiOperation("修改")
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    public Integer update(@RequestBody ${javaClassName}UpdateDTO dto){
+        return service.updateById(dto);
+    }
+
+    @ApiOperation("分页列表查询")
+    @RequestMapping(value = "/page",method = RequestMethod.POST)
+    public PageVO<${javaClassName}VO> listPage(@RequestBody ${javaClassName}PageDTO dto){
+        return service.listPage(dto);
+    }
+
+    @ApiOperation("查询所有")
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    public List<${javaClassName}VO> listAll(@RequestBody ${javaClassName}ListDTO dto){
+        return service.listAll(dto);
+    }
+
+    @ApiOperation("查询详情")
+    @RequestMapping(value = "/detail",method = RequestMethod.POST)
+    public ${javaClassName}VO detail(@RequestBody IdDTO dto){
+        return service.getById(dto.getId());
+    }
+
+    @ApiOperation("根据ids删除")
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    public Integer removeByIds(@RequestBody IdsDTO dto){
+        return service.removeByIds(dto.getIds());
+    }
+}
+

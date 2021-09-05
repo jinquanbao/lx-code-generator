@@ -1,0 +1,25 @@
+package ${basePackage}.vo.${moduleName};
+
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+
+/**
+ * @author dao-helper
+ */
+@Data
+public class ${javaClassName}VO {
+
+<#list fieldList as field>
+
+    <#if field.javaFieldName!="deletedTime" && field.javaFieldName!="deleteTime" && field.javaFieldName!="deleted">
+    @ApiModelProperty(value = "${field.fieldDesc}")
+    private ${field.fieldType.fieldType} ${field.javaFieldName};
+    </#if>
+
+
+</#list>
+
+}
+

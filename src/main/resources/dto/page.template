@@ -1,0 +1,22 @@
+package ${basePackage}.dto.${moduleName};
+
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import com.laoxin.core.dto.AbstractPageDTO;
+
+/**
+ * @author dao-helper
+ */
+@Data
+public class ${javaClassName}PageDTO extends AbstractPageDTO{
+
+    @ApiModelProperty(value = "id")
+    private long id;
+
+    @ApiModelProperty(value = "模糊搜索字段")
+    private String keyword;
+
+}
+

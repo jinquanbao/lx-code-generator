@@ -1,0 +1,25 @@
+package ${basePackage}.dto.${moduleName};
+
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+
+/**
+ * @author dao-helper
+ */
+@Data
+public class ${javaClassName}UpdateDTO {
+
+<#list fieldList as field>
+
+    <#if field.javaFieldName!="createTime" && field.javaFieldName!="updateTime" && field.javaFieldName!="deletedTime" && field.javaFieldName!="deleted" && field.javaFieldName!="deleteTime">
+    @ApiModelProperty(value = "${field.fieldDesc}")
+    private ${field.fieldType.fieldType} ${field.javaFieldName};
+    </#if>
+
+
+</#list>
+
+}
+

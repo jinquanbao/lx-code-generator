@@ -1,0 +1,20 @@
+package ${packageName}.daomanager.${moduleName}.impl;
+
+
+import org.springframework.stereotype.Service;
+
+import com.laoxin.dao.sql.dao.impl.BasePlusDaoImpl;
+
+import ${packageName}.daomanager.${moduleName}.${javaClassName}DaoManager;
+import ${packageName}.mapper.${moduleName}.${javaClassName}Mapper;
+import ${packageName}.entity.${moduleName}.${javaClassName}Entity;
+
+/**
+ * @author dao-helper
+ */
+@Service
+public class ${javaClassName}DaoManagerImpl extends BasePlusDaoImpl<${javaClassName}Entity> implements ${javaClassName}DaoManager {
+
+
+}
+

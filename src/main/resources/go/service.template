@@ -1,0 +1,120 @@
+package service
+
+import (
+	"${basePackage}/common"
+	"${basePackage}/protos"
+	"${basePackage}/dao"
+)
+
+var (
+   ${goModelClassName}Service = &${goServiceClassName}Service{}
+)
+
+type ${goServiceClassName}Service struct {
+
+}
+
+func (s *${goServiceClassName}Service) Save(dto *protos.${goModelClassName}SaveDTO) (*protos.${goModelClassName}VO, error) {
+    entity := &protos.${goModelClassName}Entity{}
+<#list fieldList as field>
+    <#if field.javaFieldName!="id" && field.javaFieldName!="createTime" && field.javaFieldName!="updateTime" && field.javaFieldName!="deletedTime" && field.javaFieldName!="deleted" && field.javaFieldName!="deleteTime">
+    entity.${field.goFieldName} = dto.${field.goFieldName}
+    </#if>
+</#list>
+    entity,err := dao.${goModelClassName}Dao.Insert(entity)
+    if err != nil{
+        return nil,err
+    }
+    vo := &protos.${goModelClassName}VO{}
+<#list fieldList as field>
+<#if field.javaFieldName!="updateTime" && field.javaFieldName!="deletedTime" && field.javaFieldName!="deleted" && field.javaFieldName!="deleteTime">
+  <#if field.fieldType.fieldType=="java.time.LocalDateTime">
+    if entity.${field.goFieldName} != nil {
+        vo.${field.goFieldName} = entity.${field.goFieldName}.Format(common.YYYY_MM_DD_HH_MM_SS)
+    }
+  <#else>
+    vo.${field.goFieldName} = entity.${field.goFieldName}
+  </#if>
+</#if>
+</#list>
+
+	return vo,err
+}
+
+
+func (s *${goServiceClassName}Service) Update(dto *protos.${goModelClassName}UpdateDTO) (int64, error) {
+
+	entity := &protos.${goModelClassName}Entity{}
+<#list fieldList as field>
+    <#if  field.javaFieldName!="createTime" && field.javaFieldName!="updateTime" && field.javaFieldName!="deletedTime" && field.javaFieldName!="deleted" && field.javaFieldName!="deleteTime">
+    entity.${field.goFieldName} = dto.${field.goFieldName}
+    </#if>
+</#list>
+
+	return dao.${goModelClassName}Dao.UpdateById(entity)
+}
+
+
+func (s *${goServiceClassName}Service) GetById(id int64) (r *protos.${goModelClassName}VO, err error) {
+
+	entity,err := dao.${goModelClassName}Dao.GetById(id)
+
+    if err != nil{
+        return nil,err
+    }
+
+    vo := &protos.${goModelClassName}VO{}
+<#list fieldList as field>
+<#if field.javaFieldName!="updateTime" && field.javaFieldName!="deletedTime" && field.javaFieldName!="deleted" && field.javaFieldName!="deleteTime">
+  <#if field.fieldType.fieldType=="java.time.LocalDateTime">
+    if entity.${field.goFieldName} != nil {
+        vo.${field.goFieldName} = entity.${field.goFieldName}.Format(common.YYYY_MM_DD_HH_MM_SS)
+    }
+  <#else>
+    vo.${field.goFieldName} = entity.${field.goFieldName}
+  </#if>
+</#if>
+</#list>
+
+	return
+}
+
+func (s *${goServiceClassName}Service) Page(dto *protos.${goModelClassName}PageDTO) (pageVO *protos.PageVO, err error) {
+
+	pageVO,err = dao.${goModelClassName}Dao.Page(dto)
+
+    if err != nil{
+        return nil,err
+    }
+    var listVO []protos.${goModelClassName}VO
+
+    list := pageVO.List.([]protos.${goModelClassName}Entity)
+
+    listVO := make([]protos.${goModelClassName}VO,0)
+
+    if len(list) >0 {
+        for _ ,entity := range list{
+            vo := protos.${goModelClassName}VO{}
+    <#list fieldList as field>
+        <#if field.javaFieldName!="updateTime" && field.javaFieldName!="deletedTime" && field.javaFieldName!="deleted" && field.javaFieldName!="deleteTime">
+          <#if field.fieldType.fieldType=="java.time.LocalDateTime">
+            if entity.${field.goFieldName} != nil {
+                vo.${field.goFieldName} = entity.${field.goFieldName}.Format(common.YYYY_MM_DD_HH_MM_SS)
+            }
+          <#else>
+            vo.${field.goFieldName} = entity.${field.goFieldName}
+          </#if>
+        </#if>
+    </#list>
+
+            listVO = append(listVO, vo)
+        }
+    }
+    pageVO.List = listVO
+
+	return
+}
+
+
+
+

@@ -1,0 +1,21 @@
+package ${basePackage}.dto.${moduleName};
+
+
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+
+/**
+ * @author dao-helper
+ */
+@Data
+public class ${javaClassName}ListDTO {
+
+    @ApiModelProperty(value = "id")
+    private long id;
+
+    @ApiModelProperty(value = "模糊搜索字段")
+    private String keyword;
+
+}
+

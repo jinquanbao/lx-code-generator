@@ -1,0 +1,23 @@
+package protos
+
+
+<#list tableList as table>
+
+type ${table.goModelClassName} struct {
+
+<#list fieldList as field>
+
+    ${field.goFieldName} ${field.fieldType.goFieldType} `json:"${field.javaFieldName}" validate:"-" db:"${field.dataBaseName}"`  // ${field.fieldDesc}
+
+</#list>
+
+}
+
+</#list>
+
+
+
+
+
+
+

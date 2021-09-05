@@ -1,0 +1,38 @@
+package ${packageName}.entity.${moduleName};
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import io.swagger.annotations.ApiModelProperty;
+
+import com.laoxin.dao.sql.entity.BaseSqlEntity;
+
+
+/**
+ * @author dao-helper
+ */
+
+
+@Data
+<#if "${jdbcType}" == "mysql" >
+@TableName("${dataBaseName}")
+<#else>
+@TableName("${schema}.${dataBaseName}")
+</#if>
+public class ${javaClassName}Entity<${idFieldType.fieldType}> implements BaseSqlEntity  {
+
+
+<#list fieldList as field>
+
+    <#if field.javaFieldName=="id">
+    @TableId(type = IdType.AUTO)
+    </#if>
+    @ApiModelProperty(value = "${field.fieldDesc}")
+    private ${field.fieldType.fieldType} ${field.javaFieldName};
+
+</#list>
+
+
+
+}

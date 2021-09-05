@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${packageName}.mapper.${moduleName}.${javaClassName}Mapper">
+
+
+    <!--处理表 -->
+<#if "${jdbcType}" == "mysql" >
+    <sql id="base"> ${dataBaseName} </sql>
+<#else>
+    <sql id="base"> ${schema}.${dataBaseName} </sql>
+</#if>
+
+
+	<!-- 查询条件 -->
+	<sql id="condition_sql">
+    <#list fieldList as field>
+        <#if field.fieldType.fieldType=="Integer">
+            <if test="${field.javaFieldName} != null and ${field.javaFieldName} > 0"> and ${field.javaFieldName?replace("([a-z])([A-Z]+)","$1_$2","r")?lower_case} = ${r"#{"}${field.javaFieldName}}</if>
+        </#if>
+        <#if field.fieldType.fieldType=="Double">
+            <if test="${field.javaFieldName} != null and ${field.javaFieldName} > 0"> and ${field.javaFieldName?replace("([a-z])([A-Z]+)","$1_$2","r")?lower_case} = ${r"#{"}${field.javaFieldName}}</if>
+        </#if>
+        <#if field.fieldType.fieldType=="Float">
+            <if test="${field.javaFieldName} != null and ${field.javaFieldName} > 0"> and ${field.javaFieldName?replace("([a-z])([A-Z]+)","$1_$2","r")?lower_case} = ${r"#{"}${field.javaFieldName}}</if>
+        </#if>
+        <#if field.fieldType.fieldType=="Long">
+            <if test="${field.javaFieldName} != null and ${field.javaFieldName} > 0"> and ${field.javaFieldName?replace("([a-z])([A-Z]+)","$1_$2","r")?lower_case} = ${r"#{"}${field.javaFieldName}}</if>
+        </#if>
+        <#if field.fieldType.fieldType=="String">
+            <if test="${field.javaFieldName} != null and ${field.javaFieldName} != ''"> and ${field.javaFieldName?replace("([a-z])([A-Z]+)","$1_$2","r")?lower_case} = ${r"#{"}${field.javaFieldName}}</if>
+        </#if>
+    </#list>
+            <if test="ids != null and ids != '' "> and id in (${r"${"}ids}) </if>
+	</sql>
+	
+</mapper>

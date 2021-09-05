@@ -1,0 +1,15 @@
+package ${packageName}.daomanager.${moduleName};
+
+
+
+import com.laoxin.dao.sql.dao.BasePlusDao;
+import ${packageName}.entity.${moduleName}.${javaClassName}Entity;
+
+/**
+ * @author dao-helper
+ */
+public interface ${javaClassName}DaoManager extends BasePlusDao<${javaClassName}Entity>{
+
+
+}
+

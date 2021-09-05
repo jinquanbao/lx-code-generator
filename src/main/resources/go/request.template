@@ -1,0 +1,30 @@
+package protos
+
+
+
+type ${goModelClassName}PageDTO struct {
+    PageDTO //分页参数
+    Keyword        string         `json:"keyword"`        // 模糊搜索字段
+}
+
+type ${goModelClassName}SaveDTO struct {
+<#list fieldList as field>
+    <#if field.javaFieldName!="id" && field.javaFieldName!="createTime" && field.javaFieldName!="updateTime" && field.javaFieldName!="deletedTime" && field.javaFieldName!="deleted" && field.javaFieldName!="deleteTime">
+    ${field.goFieldName} ${field.fieldType.goFieldType} `json:"${field.javaFieldName}" validate:"-"`  // ${field.fieldDesc}
+    </#if>
+</#list>
+}
+
+type ${goModelClassName}UpdateDTO struct {
+<#list fieldList as field>
+    <#if  field.javaFieldName!="createTime" && field.javaFieldName!="updateTime" && field.javaFieldName!="deletedTime" && field.javaFieldName!="deleted" && field.javaFieldName!="deleteTime">
+    ${field.goFieldName} ${field.fieldType.goFieldType} `json:"${field.javaFieldName}" validate:"-"`  // ${field.fieldDesc}
+    </#if>
+</#list>
+}
+
+
+
+
+
+

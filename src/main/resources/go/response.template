@@ -1,0 +1,20 @@
+package protos
+
+
+type ${goModelClassName}VO struct {
+<#list fieldList as field>
+    <#if field.javaFieldName!="updateTime" && field.javaFieldName!="deletedTime" && field.javaFieldName!="deleted" && field.javaFieldName!="deleteTime">
+    <#if field.fieldType.fieldType=="java.time.LocalDateTime">
+     ${field.goFieldName} string `json:"${field.javaFieldName}" validate:"-"`  // ${field.fieldDesc}
+    <#else>
+     ${field.goFieldName} ${field.fieldType.goFieldType} `json:"${field.javaFieldName}" validate:"-"`  // ${field.fieldDesc}
+    </#if>
+    </#if>
+</#list>
+}
+
+
+
+
+
+
