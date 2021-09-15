@@ -16,5 +16,6 @@ public class CodeGenerator {
         DaoEnvDTO dto = ac.getBean(DaoEnvDTO.class);
 
         DaoHelperFactory.getInstance(dto.getCodeLanguage()).genernate(dto);
+        System.out.println("Generator " + dto.getCodeLanguage() + " code sucess!");
     }
 }

@@ -4,12 +4,13 @@ package ${packageName}.daomanager.${moduleName};
 
 import com.laoxin.dao.sql.dao.BasePlusDao;
 import ${packageName}.entity.${moduleName}.${javaClassName}Entity;
+import ${packageName}.mapper.${moduleName}.${javaClassName}Mapper;
 
 /**
  * @author dao-helper
  */
 public interface ${javaClassName}DaoManager extends BasePlusDao<${javaClassName}Entity>{
 
-
+    ${javaClassName}Mapper getMapper();
 }
 

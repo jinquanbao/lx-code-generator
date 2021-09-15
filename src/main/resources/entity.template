@@ -20,7 +20,7 @@ import com.laoxin.dao.sql.entity.BaseSqlEntity;
 <#else>
 @TableName("${schema}.${dataBaseName}")
 </#if>
-public class ${javaClassName}Entity<${idFieldType.fieldType}> implements BaseSqlEntity  {
+public class ${javaClassName}Entity implements BaseSqlEntity<${idFieldType.fieldType}>  {
 
 
 <#list fieldList as field>

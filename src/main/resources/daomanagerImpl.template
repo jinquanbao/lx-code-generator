@@ -1,6 +1,6 @@
 package ${packageName}.daomanager.${moduleName}.impl;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.laoxin.dao.sql.dao.impl.BasePlusDaoImpl;
@@ -15,6 +15,12 @@ import ${packageName}.entity.${moduleName}.${javaClassName}Entity;
 @Service
 public class ${javaClassName}DaoManagerImpl extends BasePlusDaoImpl<${javaClassName}Entity> implements ${javaClassName}DaoManager {
 
+    @Autowired
+    private ${javaClassName}Mapper mapper;
 
+    @Override
+    public ConfigMapper getMapper() {
+        return mapper;
+    }
 }
 
