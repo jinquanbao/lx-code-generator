@@ -19,7 +19,7 @@ public class ${javaClassName}DaoManagerImpl extends BasePlusDaoImpl<${javaClassN
     private ${javaClassName}Mapper mapper;
 
     @Override
-    public ConfigMapper getMapper() {
+    public ${javaClassName}Mapper getMapper() {
         return mapper;
     }
 }
